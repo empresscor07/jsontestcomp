@@ -1,5 +1,7 @@
 package net.yorksolutions.jsontest.backend;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +13,9 @@ public class ToDo {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
 
+    // annotated this one property in todo class as a json property
+    // we called our controller a REST controller
+    @JsonProperty
     String text;
 
     public ToDo(String text) {
