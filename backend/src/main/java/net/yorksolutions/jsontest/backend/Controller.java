@@ -3,8 +3,11 @@ package net.yorksolutions.jsontest.backend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 // Annotating as a rest controller
 // gives capability to spring app to respond to web requests
@@ -26,9 +29,12 @@ public class Controller {
     }
     // request params will take from url
     // syntax is 'localhost:8080/api/echo?variable=value'
-    @GetMapping("/echo")
-    String echo(@RequestParam String stringToEcho) {
-        return stringToEcho;
+    @GetMapping("/echo/{echo}")
+    Response echo(@PathVariable String echo) {
+        Random rand = new Random();
+        int id = rand.nextInt(100);
+        Response myEcho = new Response(id, echo);
+        return myEcho;
     }
 
     @GetMapping("/add")
@@ -68,5 +74,20 @@ public class Controller {
     @GetMapping("/todo/{id}")
     ToDo todoById(@PathVariable Long id) {
         return toDoRepository.findById(id).orElse(new ToDo());
+    }
+
+    @GetMapping("/ip")
+    Object getClientIPAddress(HttpServletRequest request) {
+        String ip = HttpUtils.getRequestIP(request);
+        return "Client IP Address:" + ip;
+    }
+
+    @GetMapping("/datetime")
+    DateTimeModel displayDateTime() {
+        Date fullDate = new Date();
+        String time = fullDate.getHours() + ":" + fullDate.getMinutes() + ":" + fullDate.getSeconds();
+        String date = fullDate.toGMTString();
+
+        return new DateTimeModel(time, date);
     }
 }
